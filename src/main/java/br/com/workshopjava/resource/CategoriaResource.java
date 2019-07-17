@@ -2,6 +2,7 @@ package br.com.workshopjava.resource;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.workshopjava.domain.Categoria;
+import br.com.workshopjava.dto.CategoriaDTO;
 import br.com.workshopjava.service.CategoriaService;
 
 @RestController
@@ -26,8 +28,8 @@ public class CategoriaResource {
 	private CategoriaService service;
 	
 	@GetMapping
-	public ResponseEntity<List<Categoria>> findAll() {
-		List<Categoria> list = service.findAll();
+	public ResponseEntity<List<CategoriaDTO>> findAll() {
+		List<CategoriaDTO> list = service.findAll().stream().map(categoria -> new CategoriaDTO(categoria)).collect(Collectors.toList());
 		return ResponseEntity.ok().body(list);
 	}
 	
