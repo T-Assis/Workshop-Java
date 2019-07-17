@@ -14,6 +14,7 @@ import br.com.workshopjava.domain.Cidade;
 import br.com.workshopjava.domain.Cliente;
 import br.com.workshopjava.domain.Endereco;
 import br.com.workshopjava.domain.Estado;
+import br.com.workshopjava.domain.ItemPedido;
 import br.com.workshopjava.domain.Pagamento;
 import br.com.workshopjava.domain.PagamentoComBoleto;
 import br.com.workshopjava.domain.PagamentoComCartao;
@@ -26,6 +27,7 @@ import br.com.workshopjava.repository.CidadeRepository;
 import br.com.workshopjava.repository.ClienteRepository;
 import br.com.workshopjava.repository.EnderecoRepository;
 import br.com.workshopjava.repository.EstadoRepository;
+import br.com.workshopjava.repository.ItemPedidoRepository;
 import br.com.workshopjava.repository.PagamentoRepository;
 import br.com.workshopjava.repository.PedidoRepository;
 import br.com.workshopjava.repository.ProdutoRepository;
@@ -56,6 +58,9 @@ public class Application implements CommandLineRunner {
 
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -123,6 +128,19 @@ public class Application implements CommandLineRunner {
 
 		pedidoRepositoryo.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
+		
+		ItemPedido ip1 = new ItemPedido(ped1, p1, new BigDecimal("00.00"), 1, new BigDecimal("2000.00"));
+		ItemPedido ip2 = new ItemPedido(ped1, p3, new BigDecimal("00.00"), 2, new BigDecimal("80.00"));
+		ItemPedido ip3 = new ItemPedido(ped2, p2, new BigDecimal("100.00"), 1, new BigDecimal("800.00"));
+
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 	}
 
 }

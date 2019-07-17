@@ -2,7 +2,9 @@ package br.com.workshopjava.domain;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,6 +32,10 @@ public class Produto {
 		joinColumns = @JoinColumn(name = "produto_id"), 
 		inverseJoinColumns = @JoinColumn(name = "categoria_id"))
 	private List<Categoria> categorias = new ArrayList<>();
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "id.produto")
+	private Set<ItemPedido> itens = new HashSet<>();
 	
 	public Produto() {
 		
@@ -73,6 +80,23 @@ public class Produto {
 		this.categorias = categorias;
 	}
 
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
+	}
+	
+	@JsonIgnore
+	public List<Pedido> getPedidos() {
+		List<Pedido> list = new ArrayList<Pedido>();
+		for (ItemPedido itemPedido : itens) {
+			list.add(itemPedido.getPedido());
+		}
+		return list;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
